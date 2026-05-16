@@ -6,11 +6,10 @@ require 'phpmailer/Exception.php';
 require 'phpmailer/PHPMailer.php';
 require 'phpmailer/SMTP.php';
 
-// ====== 資料庫連線設定 ======
 $host = 'localhost';
 $db   = 'spam_system';
 $user = 'root';
-$pass = '12345'; // 若有密碼請填入
+$pass = '12345'; 
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -65,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'a0989354196@gmail.com'; // 填入你的 Gmail
-                $mail->Password   = 'ctlb htxh ivae vfmo';    // 填入你的 16 位應用程式密碼
+                $mail->Username   = 'a0989354196@gmail.com'; 
+                $mail->Password   = 'ctlb htxh ivae vfmo';    
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
                 $mail->CharSet    = 'UTF-8';
@@ -77,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 // ③ 套用基本郵件介面自訂的內容
                 $mail->isHTML(true);
                 $mail->Subject = $custom_subject; 
-                $mail->Body    = nl2br(htmlspecialchars($custom_content)); // 將換行符號轉為網頁換行 <br>
+                $mail->Body    = nl2br(htmlspecialchars($custom_content));
 
                 $mail->send();
                 $status = "<span style='color:green;'>成功寄出！</span>";
@@ -85,13 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $status = "<span style='color:red;'>失敗: {$mail->ErrorInfo}</span>";
             }
             
-            // ③ 顯示寄送進度比例
             echo "<div>進度: <strong>{$current_count} / {$total_targets}</strong> - 正在寄送到: {$to} ... {$status}</div>";
             
             ob_flush();
             flush();
 
-            // ② 時間間隔
             if ($current_count < $total_targets) {
                 sleep($interval); 
             }
